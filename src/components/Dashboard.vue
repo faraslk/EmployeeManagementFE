@@ -4,14 +4,14 @@
     <v-col cols="12" lg="3">
         <v-card @click="$router.push('/form')" class="card-style">
         <div class="image-container">
-          <img src="D:\Faras\Laravel + Vue\EmployeeManagementFE\src\assets\add.png" alt="Icon"  />
+          <img src="@/assets/add.png" alt="Icon"  />
         </div>
        <v-card-text class="card-text">Add Employee</v-card-text>
     
         </v-card>
 </v-col>
 <v-col cols="12" lg="3">
-        <v-card :href="'https://www.w3schools.com'" target="_blank" class="card-style">
+        <v-card @click="$router.push('/viewemployee')" target="_blank" class="card-style">
         <div class="image-container">
           <img src="D:\Faras\Laravel + Vue\EmployeeManagementFE\src\assets\view-icon.jpg" alt="Icon"  />
         </div>

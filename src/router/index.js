@@ -1,16 +1,20 @@
-
-import { routes } from 'vue-router/auto-routes'
 import { createRouter, createWebHistory } from "vue-router";
-import Form from './modules/form'
+import homeRoutes from "./modules/home";
+import formRoutes from "./modules/form";
+import viewemployee from "./modules/viewemployee";
+import EditEmployee from "./modules/EditEmployee";
 
-//   const routes =[
-//   ...Form,
+const routes = [
+  ...homeRoutes,
+  ...formRoutes,
+  ...viewemployee,
+  ...EditEmployee
 
-//  ];
+  ];
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes,
-})
+});
 
-export default router
+export default router;

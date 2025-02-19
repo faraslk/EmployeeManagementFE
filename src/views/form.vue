@@ -4,22 +4,9 @@
         <v-card-title class="text-h5">Employee Details</v-card-title>
         <v-card-text>
           <v-form ref="employeeForm" v-model="valid">
-            <v-select
-              label="Salutation"
-              v-model="form.salutation"
-              :items="['Mr.', 'Ms.', 'Mrs.', 'Dr.']"
-              required
-            ></v-select>
-  
             <v-text-field
-              label="First Name"
-              v-model="form.firstName"
-              :rules="[rules.required]"
-            ></v-text-field>
-  
-            <v-text-field
-              label="Last Name"
-              v-model="form.lastName"
+              label="Name"
+              v-model="form.name"
               :rules="[rules.required]"
             ></v-text-field>
   
@@ -59,30 +46,63 @@
     </v-container>
   </template>
   
-  <script setup>
+  <script>
   import { ref } from "vue";
+  import EmployeeApi from "@/Api/Modules/Employee"; // Import your API module
   
-  const valid = ref(false);
-  const form = ref({
-    salutation: "",
-    firstName: "",
-    lastName: "",
-    email: "",
-    phone: "",
-    designation: "",
-    salary: "",
-  });
-  
-  const rules = {
-    required: (value) => !!value || "Required.",
-    email: (value) => /.+@.+\..+/.test(value) || "Invalid email.",
-    phone: (value) => /^\d{10}$/.test(value) || "Enter a valid 10-digit phone number.",
-    salary: (value) => (value > 0 && Number.isInteger(+value)) || "Enter a valid salary.",
-  };
-  
-  const submitForm = () => {
-    alert("Form submitted successfully!");
-    console.log(form.value);
+  export default {
+    data() {
+      return {
+        valid: false,
+        form: {
+          name: "",
+          email: "",
+          phone: "",
+          designation: "",
+          salary: "",
+        },
+        rules: {
+          required: (value) => !!value || "Required.",
+          email: (value) => /.+@.+\..+/.test(value) || "Invalid email.",
+          phone: (value) => /^\d{10}$/.test(value) || "Enter a valid 10-digit phone number.",
+          salary: (value) => (value > 0 && Number.isInteger(+value)) || "Enter a valid salary.",
+        },
+        showloader: false, // Add a loader property (if needed)
+      };
+    },
+    methods: {
+      async submitForm() {
+        if (this.valid) {  // Check form validity
+          this.showloader = true;
+          try {
+            const response = await EmployeeApi.storeEmployees(this.form);
+            console.log("Employee created:", response.data);
+            this.form = { name: "", email: "", phone: "", designation: "", salary: "" }; // Reset form
+            this.$emit("closeModal", true); // Emit a close event (if used in a modal)
+            // or a success message:
+            // this.$snackbar.open({ message: 'Employee created!', color: 'success' });
+          } catch (error) {
+            console.error("Error creating employee:", error);
+            if (error.response && error.response.data && error.response.data.errors) {
+              console.error("Validation Errors:", error.response.data.errors);
+              // Display validation errors (e.g., using a snackbar):
+              for (const field in error.response.data.errors) {
+                error.response.data.errors[field].forEach(errorMessage => {
+                  alert(`${field}: ${errorMessage}`); // Replace with snackbar
+                });
+              }
+            } else if (error.response) {
+              console.error("Server Error:", error.response.data);
+              alert("A server error occurred. Please try again later."); // Replace with snackbar
+            } else {
+              console.error("Request Error:", error.message);
+              alert("A request error occurred. Please check your network connection."); // Replace with snackbar
+            }
+          } finally {
+            this.showloader = false;
+          }
+        }
+      },
+    },
   };
   </script>
-  

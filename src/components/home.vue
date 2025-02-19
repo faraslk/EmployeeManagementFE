@@ -1,14 +1,16 @@
 <template>
+
+<title>Employee Management System</title>
   <Header />
-  <Dashboard />
+  <Employeeview />
 </template>
 <script>
 import Header from "@/components/header.vue";
-import Dashboard from "@/components/Dashboard.vue";
+import Employeeview from "@/components/Employeeview.vue";
 export default {
   components: {
     Header,
-    Dashboard,
+    Employeeview,
   },
 };
 </script>
